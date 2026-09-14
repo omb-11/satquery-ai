@@ -2,92 +2,109 @@
 setlocal enabledelayedexpansion
 
 echo.
-echo ============================================================
-echo   SATQUERY AI - Remote Sensing Intelligence Workstation
-echo   ISRO Smart India Hackathon 2026
-echo ============================================================
+echo ===============================================================================
+echo   SATQUERY AI -- MULTIMODAL EARTH OBSERVATION INTELLIGENCE WORKSTATION
+echo   ISRO Smart India Hackathon 2026 -- Problem Statement 26167
+echo ===============================================================================
 echo.
 
-:: Check Python
+:: Detect root directory
+if exist satquery-ai (
+    set "SQ_ROOT=satquery-ai"
+) else (
+    set "SQ_ROOT=."
+)
+
+:: STEP 1: Python Check
+echo [1/7] Inspecting Python runtime...
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Python not found. Please install Python 3.10+
+    echo [ERROR] Python 3.10+ is required but not found in PATH.
     pause
     exit /b 1
 )
 
-:: Check Node
+:: STEP 2: Node.js Check
+echo [2/7] Inspecting Node.js runtime...
 node --version >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Node.js not found. Please install Node.js 18+
+    echo [ERROR] Node.js 18+ is required but not found in PATH.
     pause
     exit /b 1
 )
 
-:: Setup .env if needed
-if not exist satquery-ai\.env (
-    copy satquery-ai\.env.example satquery-ai\.env >nul
-    echo [INFO] Created .env from template
+:: STEP 3: Virtual Environment Check
+echo [3/7] Verifying Python virtual environment...
+if not exist "%SQ_ROOT%\venv" (
+    echo [INFO] Creating Python virtual environment at %SQ_ROOT%\venv...
+    python -m venv "%SQ_ROOT%\venv"
+    echo [INFO] Performing initial dependency installation...
+    "%SQ_ROOT%\venv\Scripts\pip" install -q -r "%SQ_ROOT%\backend\requirements.txt"
 )
 
-:: Create data directories
-if not exist satquery-ai\data mkdir satquery-ai\data
-if not exist satquery-ai\data\uploads mkdir satquery-ai\data\uploads
-if not exist satquery-ai\data\results mkdir satquery-ai\data\results
-if not exist satquery-ai\data\reports mkdir satquery-ai\data\reports
-
-:: Install Python deps if needed
-if not exist satquery-ai\venv (
-    echo [INFO] Creating Python virtual environment...
-    python -m venv satquery-ai\venv
+:: Create environment & data directories if needed
+if not exist "%SQ_ROOT%\.env" (
+    if exist "%SQ_ROOT%\.env.example" (
+        copy "%SQ_ROOT%\.env.example" "%SQ_ROOT%\.env" >nul
+        echo [INFO] Initialized %SQ_ROOT%\.env from template.
+    )
 )
-echo [INFO] Installing Python dependencies...
-satquery-ai\venv\Scripts\pip install -q -r satquery-ai\backend\requirements.txt
+if not exist "%SQ_ROOT%\data" mkdir "%SQ_ROOT%\data"
+if not exist "%SQ_ROOT%\data\uploads" mkdir "%SQ_ROOT%\data\uploads"
+if not exist "%SQ_ROOT%\data\results" mkdir "%SQ_ROOT%\data\results"
+if not exist "%SQ_ROOT%\data\reports" mkdir "%SQ_ROOT%\data\reports"
 
-:: Generate demo data
-echo [INFO] Generating demo data...
-satquery-ai\venv\Scripts\python satquery-ai\scripts\generate_demo_data.py
-
-:: Install frontend deps if needed
-if not exist satquery-ai\frontend\node_modules (
-    echo [INFO] Installing frontend dependencies...
-    cd satquery-ai\frontend
-    npm install --silent
-    cd ..\..
+:: STEP 4: Rapid Pre-flight Dependency Check (Skip if satisfied!)
+echo [4/7] Performing rapid dependency verification...
+"%SQ_ROOT%\venv\Scripts\python" "%SQ_ROOT%\scripts\check_dependencies.py"
+if errorlevel 2 (
+    echo [INFO] Installing frontend npm dependencies...
+    pushd "%SQ_ROOT%\frontend"
+    call npm install --silent
+    popd
+) else if errorlevel 1 (
+    echo [INFO] Installing missing Python requirements...
+    "%SQ_ROOT%\venv\Scripts\pip" install -r "%SQ_ROOT%\backend\requirements.txt"
+) else (
+    echo [INFO] Preflight dependencies satisfied. Fast-boot active.
 )
 
+:: STEP 5: Verify Demo Assets & Specialist Registry
+echo [5/7] Verifying synthetic Earth observation demo scenes...
+if not exist "%SQ_ROOT%\demo_data\single_optical\scene_optical.tif" (
+    echo [INFO] Generating calibrated demo GeoTIFFs...
+    "%SQ_ROOT%\venv\Scripts\python" "%SQ_ROOT%\scripts\generate_demo_data.py"
+)
+
+:: STEP 6: Launch Backend & Frontend Services
+echo [6/7] Dispatching microservices...
+
+:: Launch backend
+start "SatQuery AI Backend Engine" cmd /k "cd %SQ_ROOT% && set PYTHONPATH=. && venv\Scripts\python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"
+
+:: Launch frontend
+start "SatQuery AI Frontend Workstation" cmd /k "cd %SQ_ROOT%\frontend && npm run dev"
+
+:: STEP 7: Startup Banner & Browser Launch
+echo [7/7] Awaiting microservice initialization...
+timeout /t 3 /nobreak >nul
+
 echo.
-echo [INFO] Starting SatQuery AI...
+echo ===============================================================================
+echo   SATQUERY AI SYSTEM ONLINE
+echo.
+echo   - Mission UI:       http://localhost:5173
+echo   - REST & SSE API:   http://localhost:8000/api/v1
+echo   - Interactive Docs: http://localhost:8000/docs
+echo   - Telemetry Health: http://localhost:8000/api/v1/health
+echo ===============================================================================
 echo.
 
-:: Start backend in background
-start "SatQuery Backend" cmd /k "cd satquery-ai && set PYTHONPATH=. && venv\Scripts\python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"
-
-:: Wait for backend
-echo [INFO] Waiting for backend to start...
-timeout /t 5 /nobreak >nul
-
-:: Start frontend
-start "SatQuery Frontend" cmd /k "cd satquery-ai\frontend && npm run dev"
-
-echo.
-echo ============================================================
-echo   SatQuery AI is starting!
-echo.
-echo   Backend API:  http://localhost:8000
-echo   Frontend UI:  http://localhost:5173
-echo   API Docs:     http://localhost:8000/docs
-echo ============================================================
-echo.
-
-:: Open browser after delay
-timeout /t 8 /nobreak >nul
 start "" "http://localhost:5173"
 
-echo Press any key to stop SatQuery AI...
+echo Press any key to stop all SatQuery AI services...
 pause >nul
 
-:: Cleanup
-taskkill /f /fi "WINDOWTITLE eq SatQuery Backend*" >nul 2>&1
-taskkill /f /fi "WINDOWTITLE eq SatQuery Frontend*" >nul 2>&1
-echo [INFO] SatQuery AI stopped.
+taskkill /f /fi "WINDOWTITLE eq SatQuery AI Backend Engine*" >nul 2>&1
+taskkill /f /fi "WINDOWTITLE eq SatQuery AI Frontend Workstation*" >nul 2>&1
+echo [INFO] SatQuery AI services gracefully halted.
