@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" style="background:#030504;font-family:'JetBrains Mono',monospace;">
+  <defs>
+    <radialGradient id="sarGlow" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0c1815" />
+      <stop offset="100%" stop-color="#030504" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#sarGlow)" />
+
+  <!-- Top Bar -->
+  <rect x="0" y="0" width="1280" height="48" fill="#070a08" stroke="#16221a" stroke-width="1" />
+  <circle cx="24" cy="24" r="6" fill="#00ff87" />
+  <text x="38" y="29" fill="#00ff87" font-weight="bold" font-size="16" letter-spacing="2">SATQUERY AI</text>
+  <text x="175" y="28" fill="#607b6d" font-size="11">| OPTICAL + SAR CROSS-MODAL FUSION ENGINE</text>
+  <text x="560" y="28" fill="#00e5ff" font-size="12" letter-spacing="1">RADAR PENETRATION × MULTISPECTRAL PURITY</text>
+
+  <!-- Dual Viewports Side-by-Side -->
+  <!-- 1. Left Viewport: Optical Multispectral -->
+  <g transform="translate(60, 80)">
+    <rect width="420" height="420" rx="4" fill="#060907" stroke="#1b3827" stroke-width="2" />
+    <!-- Simulated True Color / NIR Optical Composite -->
+    <rect x="10" y="10" width="400" height="400" fill="#142c1e" />
+    <!-- River channel (cloud obscured partially) -->
+    <path d="M 10 320 Q 180 280 240 180 T 410 80 L 410 140 Q 260 230 180 340 L 10 380 Z" fill="#0c1d2e" />
+    <!-- Thin cloud veil -->
+    <ellipse cx="280" cy="180" rx="110" ry="60" fill="rgba(255,255,255,0.45)" />
+
+    <!-- Label -->
+    <rect x="20" y="20" width="230" height="26" rx="2" fill="#070a08" stroke="#00ff87" stroke-width="1" />
+    <text x="30" y="37" fill="#00ff87" font-size="11" font-weight="bold">OPTICAL MULTISPECTRAL</text>
+    <text x="30" y="390" fill="#a4c2b2" font-size="10">Cloud veil obscures central river</text>
+  </g>
+
+  <!-- 2. Right Viewport: SAR Sentinel-1 Backscatter -->
+  <g transform="translate(500, 80)">
+    <rect width="420" height="420" rx="4" fill="#060907" stroke="#00e5ff" stroke-width="2" />
+    <!-- Synthetic Aperture Radar Grayscale Backscatter -->
+    <rect x="10" y="10" width="400" height="400" fill="#202220" />
+    <!-- Specular dark reflection for water (penetrates cloud completely!) -->
+    <path d="M 10 320 Q 180 280 240 180 T 410 80 L 410 140 Q 260 230 180 340 L 10 380 Z" fill="#030303" stroke="#00e5ff" stroke-width="1.5" />
+    <!-- Double bounce bright urban spikes -->
+    <circle cx="100" cy="120" r="14" fill="#ffffff" />
+    <circle cx="140" cy="110" r="18" fill="#ffffff" />
+    <circle cx="340" cy="310" r="16" fill="#ffffff" />
+
+    <!-- Label -->
+    <rect x="20" y="20" width="220" height="26" rx="2" fill="#070a08" stroke="#00e5ff" stroke-width="1" />
+    <text x="30" y="37" fill="#00e5ff" font-size="11" font-weight="bold">SAR SENTINEL-1 C-BAND</text>
+    <text x="30" y="390" fill="#00e5ff" font-size="10">Cloud penetrated: σ₀ = -24 dB</text>
+  </g>
+
+  <!-- Right Telemetry Panel: Cross-Modal Evidence Matrix -->
+  <rect x="940" y="80" width="280" height="600" rx="4" fill="#060907" stroke="#1c2d22" stroke-width="1" />
+  <text x="960" y="114" fill="#00ff87" font-size="12" font-weight="bold">CROSS-MODAL MATRIX</text>
+
+  <!-- Corroboration Gauge -->
+  <g transform="translate(960, 140)">
+    <rect width="240" height="85" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="12" y="22" fill="#849b8d" font-size="10">CROSS-MODAL AGREEMENT</text>
+    <text x="12" y="56" fill="#00ff87" font-size="28" font-weight="bold">88%</text>
+    <text x="90" y="52" fill="#00ff87" font-size="11" font-weight="bold">HIGH CORROBORATION</text>
+    <rect x="12" y="68" width="216" height="6" rx="2" fill="#132018" />
+    <rect x="12" y="68" width="190" height="6" rx="2" fill="#00ff87" />
+  </g>
+
+  <!-- Feature Comparison Table -->
+  <g transform="translate(960, 245)">
+    <rect width="240" height="220" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="12" y="22" fill="#849b8d" font-size="10" font-weight="bold">FEATURE DE-AMBIGUATION</text>
+    
+    <!-- Row 1: Water Body -->
+    <text x="12" y="50" fill="#ffffff" font-size="10" font-weight="bold">Open Water Course</text>
+    <text x="12" y="66" fill="#607b6d" font-size="9">Optical: Obscured by cloud</text>
+    <text x="12" y="80" fill="#00e5ff" font-size="9">SAR: Specular reflection (-24 dB)</text>
+    <text x="12" y="94" fill="#00ff87" font-size="9">Result: Confirmed Active River</text>
+
+    <line x1="12" y1="106" x2="228" y2="106" stroke="#16221a" />
+
+    <!-- Row 2: Built-up Structures -->
+    <text x="12" y="126" fill="#ffffff" font-size="10" font-weight="bold">High-Density Built-up</text>
+    <text x="12" y="142" fill="#a4c2b2" font-size="9">Optical: NDBI = +0.32</text>
+    <text x="12" y="156" fill="#00e5ff" font-size="9">SAR: Double bounce (-4 dB)</text>
+    <text x="12" y="170" fill="#00ff87" font-size="9">Result: Solid Structural Cluster</text>
+  </g>
+
+  <!-- Bottom Synthesis Banner -->
+  <g transform="translate(60, 520)">
+    <rect width="860" height="160" rx="4" fill="#060907" stroke="#1c2d22" stroke-width="1" />
+    <rect x="20" y="20" width="180" height="24" rx="2" fill="#0a140f" stroke="#00ff87" stroke-width="1" />
+    <text x="32" y="36" fill="#00ff87" font-size="10" font-weight="bold">SYNTHESIS FINDING</text>
+    
+    <text x="20" y="70" fill="#ffffff" font-size="13" font-weight="bold">
+      Cross-modal fusion resolves cloud occlusion over the arterial waterway.
+    </text>
+    <text x="20" y="94" fill="#a4c2b2" font-size="11">
+      Optical multispectral imagery exhibited 35% localized haze and cirrus cloud interference.
+    </text>
+    <text x="20" y="112" fill="#a4c2b2" font-size="11">
+      Synthetic Aperture Radar (SAR) C-band penetrated the atmospheric disturbance with zero signal degradation,
+    </text>
+    <text x="20" y="130" fill="#00ff87" font-size="11">
+      confirming a continuous 14.8-hectare water body flanked by commercial masonry structures.
+    </text>
+  </g>
+</svg>

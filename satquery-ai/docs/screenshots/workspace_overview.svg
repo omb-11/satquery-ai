@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" style="background:#030504;font-family:'JetBrains Mono',monospace;">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0c120e" />
+      <stop offset="100%" stop-color="#030504" />
+    </radialGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff87" />
+      <stop offset="100%" stop-color="#00b85a" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="720" fill="url(#bgGlow)" />
+
+  <!-- Grid overlay -->
+  <g stroke="#0f1912" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="48" x2="1280" y2="48" />
+    <line x1="260" y1="48" x2="260" y2="720" />
+    <line x1="960" y1="48" x2="960" y2="720" />
+    <line x1="260" y1="520" x2="960" y2="520" />
+  </g>
+
+  <!-- Top Bar -->
+  <rect x="0" y="0" width="1280" height="48" fill="#070a08" stroke="#16221a" stroke-width="1" />
+  <circle cx="24" cy="24" r="6" fill="#00ff87" filter="url(#glow)" />
+  <text x="38" y="29" fill="#00ff87" font-weight="bold" font-size="16" letter-spacing="2">SATQUERY AI</text>
+  <text x="175" y="28" fill="#607b6d" font-size="11">| REMOTE SENSING INTELLIGENCE WORKSTATION</text>
+  <text x="500" y="28" fill="#a4c2b2" font-size="12" letter-spacing="1">ISRO — SMART INDIA HACKATHON 2026 (PS: 26167)</text>
+  <rect x="1080" y="14" width="80" height="20" rx="2" fill="#0c1811" stroke="#00ff87" stroke-width="1" />
+  <text x="1090" y="28" fill="#00ff87" font-size="10" font-weight="bold">GPU READY</text>
+  <rect x="1170" y="14" width="90" height="20" rx="2" fill="#0c1811" stroke="#1c2d22" stroke-width="1" />
+  <text x="1182" y="28" fill="#849b8d" font-size="10">SYS: NOMINAL</text>
+
+  <!-- LEFT PANEL: Inputs & Mode Selector -->
+  <rect x="0" y="48" width="260" height="672" fill="#050806" stroke="#16221a" stroke-width="1" />
+  <text x="16" y="76" fill="#849b8d" font-size="11" font-weight="bold" letter-spacing="1">MISSION MODE</text>
+  
+  <rect x="16" y="90" width="228" height="28" rx="2" fill="#0c1811" stroke="#00ff87" stroke-width="1" />
+  <text x="28" y="108" fill="#00ff87" font-size="11" font-weight="bold">● SINGLE IMAGE (VQA)</text>
+  
+  <rect x="16" y="126" width="228" height="28" rx="2" fill="#080c0a" stroke="#16221a" stroke-width="1" />
+  <text x="28" y="144" fill="#607b6d" font-size="11">○ BI-TEMPORAL CHANGE</text>
+
+  <rect x="16" y="162" width="228" height="28" rx="2" fill="#080c0a" stroke="#16221a" stroke-width="1" />
+  <text x="28" y="180" fill="#607b6d" font-size="11">○ OPTICAL + SAR FUSION</text>
+
+  <text x="16" y="222" fill="#849b8d" font-size="11" font-weight="bold" letter-spacing="1">ISRO DEMO PRESETS</text>
+  <rect x="16" y="234" width="228" height="34" rx="2" fill="#0c120e" stroke="#16221a" />
+  <text x="26" y="255" fill="#a4c2b2" font-size="11">Optical Scene: River &amp; Port</text>
+  <rect x="16" y="276" width="228" height="34" rx="2" fill="#0c120e" stroke="#16221a" />
+  <text x="26" y="297" fill="#a4c2b2" font-size="11">SAR Sentinel-1: Urban Flood</text>
+  <rect x="16" y="318" width="228" height="34" rx="2" fill="#0c120e" stroke="#16221a" />
+  <text x="26" y="339" fill="#a4c2b2" font-size="11">Bi-Temporal: Urban Expansion</text>
+
+  <text x="16" y="388" fill="#849b8d" font-size="11" font-weight="bold" letter-spacing="1">ACTIVE TELEMETRY</text>
+  <rect x="16" y="400" width="228" height="110" rx="2" fill="#070c09" stroke="#16221a" />
+  <text x="26" y="422" fill="#607b6d" font-size="10">CRS: EPSG:4326 (WGS-84)</text>
+  <text x="26" y="442" fill="#607b6d" font-size="10">RES: 0.5m GSD | 256x256 px</text>
+  <text x="26" y="462" fill="#607b6d" font-size="10">BANDS: 3 (Red, Green, Blue)</text>
+  <text x="26" y="482" fill="#607b6d" font-size="10">ORBIT: Cartosat-2C Sun-Sync</text>
+  <text x="26" y="502" fill="#00ff87" font-size="10">VALIDATION: PASS (100%)</text>
+
+  <!-- CENTER PANEL: Hero Imagery Viewport (70% HERO) -->
+  <rect x="260" y="48" width="700" height="472" fill="#040605" />
+  
+  <!-- Simulated Satellite Image -->
+  <g transform="translate(380, 80)">
+    <!-- Earth Observation Surface simulation -->
+    <rect width="460" height="380" rx="2" fill="#12251a" stroke="#1b3827" stroke-width="2" />
+    <path d="M 40 380 Q 120 200 220 180 T 460 120 L 460 380 Z" fill="#0c1c2e" />
+    <path d="M 0 100 Q 140 80 200 120 T 400 60 L 460 0 L 0 0 Z" fill="#1d3822" />
+    <!-- Urban / Built-up grid -->
+    <g fill="#424c45" stroke="#2b332e" stroke-width="1">
+      <rect x="260" y="190" width="40" height="30" />
+      <rect x="310" y="180" width="45" height="35" />
+      <rect x="280" y="230" width="50" height="40" />
+      <rect x="340" y="225" width="35" height="45" />
+    </g>
+
+    <!-- Grounded Evidence Box (Water Body) -->
+    <rect x="180" y="240" width="160" height="90" fill="rgba(0,255,135,0.15)" stroke="#00ff87" stroke-width="2" stroke-dasharray="6 3" />
+    <rect x="180" y="220" width="130" height="20" fill="#070a08" stroke="#00ff87" stroke-width="1" />
+    <text x="186" y="234" fill="#00ff87" font-size="10" font-weight="bold">Water body (92%)</text>
+
+    <!-- Reticle corner brackets -->
+    <path d="M 174 250 L 174 234 L 190 234" stroke="#00ff87" stroke-width="2" fill="none" />
+    <path d="M 346 320 L 346 336 L 330 336" stroke="#00ff87" stroke-width="2" fill="none" />
+
+    <!-- Center Crosshairs -->
+    <line x1="225" y1="210" x2="235" y2="210" stroke="#00ff87" stroke-width="1" />
+    <line x1="230" y1="205" x2="230" y2="215" stroke="#00ff87" stroke-width="1" />
+  </g>
+
+  <!-- Viewport HUD Overlay -->
+  <rect x="276" y="60" width="250" height="26" rx="2" fill="rgba(7,10,8,0.85)" stroke="#16221a" />
+  <text x="286" y="77" fill="#00ff87" font-size="10">CENTROID: 28.550°N, 77.050°E</text>
+
+  <rect x="276" y="480" width="200" height="26" rx="2" fill="rgba(7,10,8,0.85)" stroke="#16221a" />
+  <text x="286" y="497" fill="#849b8d" font-size="10">FOV: 100% | GSD: 0.5m/px</text>
+
+  <!-- CENTER BOTTOM: Expandable Analytics Shelf -->
+  <rect x="260" y="520" width="700" height="200" fill="#060907" stroke="#16221a" stroke-width="1" />
+  
+  <!-- Shelf Tab Bar -->
+  <rect x="260" y="520" width="700" height="32" fill="#090e0b" stroke="#16221a" stroke-width="1" />
+  <rect x="270" y="525" width="85" height="22" rx="2" fill="#0c1811" stroke="#00ff87" stroke-width="1" />
+  <text x="282" y="540" fill="#00ff87" font-size="10" font-weight="bold">OVERVIEW</text>
+  <text x="375" y="540" fill="#849b8d" font-size="10">SPECTRAL</text>
+  <text x="450" y="540" fill="#849b8d" font-size="10">TEMPORAL</text>
+  <text x="530" y="540" fill="#849b8d" font-size="10">SAR / FUSION</text>
+  <text x="630" y="540" fill="#849b8d" font-size="10">EVIDENCE (3)</text>
+  <text x="730" y="540" fill="#849b8d" font-size="10">TRACE (6)</text>
+
+  <!-- Spectral Mini-bars in Shelf -->
+  <g transform="translate(280, 565)">
+    <!-- NDVI Card -->
+    <rect x="0" y="0" width="200" height="120" rx="2" fill="#0a100c" stroke="#16221a" />
+    <text x="12" y="24" fill="#00ff87" font-size="11" font-weight="bold">NDVI (Vegetation)</text>
+    <text x="150" y="24" fill="#fff" font-size="11" font-weight="bold">0.62</text>
+    <rect x="12" y="34" width="176" height="8" rx="2" fill="#132018" />
+    <rect x="12" y="34" width="125" height="8" rx="2" fill="#00ff87" />
+    <text x="12" y="60" fill="#607b6d" font-size="9">MIN: 0.12 | MAX: 0.84</text>
+    <text x="12" y="80" fill="#607b6d" font-size="9">CLASSIFICATION: DENSE CANOPY</text>
+    <text x="12" y="100" fill="#00ff87" font-size="9">SPECTRAL CONF: 94%</text>
+
+    <!-- NDWI Card -->
+    <rect x="220" y="0" width="200" height="120" rx="2" fill="#0a100c" stroke="#16221a" />
+    <text x="232" y="24" fill="#00e5ff" font-size="11" font-weight="bold">NDWI (Water Body)</text>
+    <text x="370" y="24" fill="#fff" font-size="11" font-weight="bold">+0.38</text>
+    <rect x="232" y="34" width="176" height="8" rx="2" fill="#132018" />
+    <rect x="232" y="34" width="140" height="8" rx="2" fill="#00e5ff" />
+    <text x="232" y="60" fill="#607b6d" font-size="9">MIN: -0.45 | MAX: +0.65</text>
+    <text x="232" y="80" fill="#607b6d" font-size="9">FEATURE: OPEN WATER SURFACE</text>
+    <text x="232" y="100" fill="#00e5ff" font-size="9">DELINEATED: 14.8 HECTARES</text>
+
+    <!-- Co-Registration Card -->
+    <rect x="440" y="0" width="200" height="120" rx="2" fill="#0a100c" stroke="#16221a" />
+    <text x="452" y="24" fill="#ffaa00" font-size="11" font-weight="bold">Cross-Modal Corroboration</text>
+    <text x="590" y="24" fill="#fff" font-size="11" font-weight="bold">88%</text>
+    <rect x="452" y="34" width="176" height="8" rx="2" fill="#132018" />
+    <rect x="452" y="34" width="155" height="8" rx="2" fill="#ffaa00" />
+    <text x="452" y="60" fill="#607b6d" font-size="9">OPTICAL NDWI: +0.38 (WATER)</text>
+    <text x="452" y="80" fill="#607b6d" font-size="9">SAR BACKSCATTER: -21 dB (SPECULAR)</text>
+    <text x="452" y="100" fill="#00ff87" font-size="9">AGREEMENT: PERFECT CORROBORATION</text>
+  </g>
+
+  <!-- RIGHT PANEL: Query & Intelligence Briefing -->
+  <rect x="960" y="48" width="320" height="672" fill="#070a08" stroke="#16221a" stroke-width="1" />
+  
+  <text x="976" y="76" fill="#849b8d" font-size="11" font-weight="bold" letter-spacing="1">NATURAL LANGUAGE QUERY</text>
+  <rect x="976" y="88" width="288" height="60" rx="2" fill="#040605" stroke="#16221a" />
+  <text x="986" y="110" fill="#e2f0e8" font-size="11">"Identify water bodies and calculate</text>
+  <text x="986" y="128" fill="#e2f0e8" font-size="11">vegetation index across the sector."</text>
+
+  <rect x="976" y="156" width="288" height="28" rx="2" fill="#0c1811" stroke="#00ff87" stroke-width="1" />
+  <text x="1055" y="174" fill="#00ff87" font-size="11" font-weight="bold">⚡ DISPATCH ORCHESTRATOR</text>
+
+  <!-- Intelligence Briefing Box -->
+  <rect x="976" y="200" width="288" height="500" rx="2" fill="#050806" stroke="#16221a" />
+  <rect x="976" y="200" width="288" height="26" fill="#0a120d" stroke="#16221a" />
+  <circle cx="990" cy="213" r="3" fill="#00ff87" />
+  <text x="1000" y="217" fill="#00ff87" font-size="10" font-weight="bold">INTELLIGENCE BRIEFING</text>
+  <text x="1200" y="217" fill="#607b6d" font-size="9">RUN #8F3A10</text>
+
+  <text x="990" y="250" fill="#ffffff" font-size="12" font-weight="bold">Water Body Verified in Southeast</text>
+  <text x="990" y="270" fill="#a4c2b2" font-size="10">High-confidence detection of an active</text>
+  <text x="990" y="286" fill="#a4c2b2" font-size="10">reservoir with mean NDWI +0.38 and</text>
+  <text x="990" y="302" fill="#a4c2b2" font-size="10">healthy riparian canopy (NDVI 0.62).</text>
+
+  <!-- Confidence Rating Meter -->
+  <g transform="translate(990, 325)">
+    <rect x="0" y="0" width="260" height="54" rx="2" fill="#0c140f" stroke="#16221a" />
+    <text x="10" y="18" fill="#849b8d" font-size="9" font-weight="bold">CALIBRATED CONFIDENCE</text>
+    <text x="10" y="42" fill="#00ff87" font-size="20" font-weight="bold">88%</text>
+    <text x="60" y="38" fill="#00ff87" font-size="9" font-weight="bold">HIGH CONFIDENCE</text>
+    <rect x="150" y="28" width="100" height="6" rx="2" fill="#132018" />
+    <rect x="150" y="28" width="88" height="6" rx="2" fill="#00ff87" />
+  </g>
+
+  <!-- Evidence List -->
+  <text x="990" y="405" fill="#849b8d" font-size="10" font-weight="bold">VERIFIED SPATIAL EVIDENCE (3)</text>
+  
+  <rect x="990" y="415" width="260" height="50" rx="2" fill="#0c140f" stroke="#16221a" />
+  <text x="998" y="432" fill="#e2f0e8" font-size="10">Open water body in sector SE</text>
+  <text x="998" y="452" fill="#00ff87" font-size="9">NDWI + SAR Specular (94% conf)</text>
+
+  <rect x="990" y="473" width="260" height="50" rx="2" fill="#0c140f" stroke="#16221a" />
+  <text x="998" y="490" fill="#e2f0e8" font-size="10">Dense vegetation belt adjacent</text>
+  <text x="998" y="510" fill="#00ff87" font-size="9">NDVI 0.62 Canopy (86% conf)</text>
+
+  <rect x="990" y="531" width="260" height="50" rx="2" fill="#0c140f" stroke="#16221a" />
+  <text x="998" y="548" fill="#e2f0e8" font-size="10">Urban structures in northwest</text>
+  <text x="998" y="568" fill="#00ff87" font-size="9">Double-bounce SAR + NDBI (82%)</text>
+
+  <!-- Export Buttons -->
+  <rect x="990" y="640" width="125" height="28" rx="2" fill="#0a140e" stroke="#00ff87" stroke-width="1" />
+  <text x="1005" y="658" fill="#00ff87" font-size="9" font-weight="bold">EXPORT REPORT (HTML)</text>
+
+  <rect x="1125" y="640" width="125" height="28" rx="2" fill="#0a140e" stroke="#1c2e22" />
+  <text x="1145" y="658" fill="#849b8d" font-size="9">AUDIT LOG (JSON)</text>
+</svg>

@@ -4,9 +4,13 @@ import InputPanel from '../components/InputPanel';
 import ImageViewer from '../components/ImageViewer';
 import QueryPanel from '../components/QueryPanel';
 import ResultPanel from '../components/ResultPanel';
-import ExecutionTrace from '../components/ExecutionTrace';
+import AnalyticsShelf from '../components/AnalyticsShelf';
 import { UploadedFile, AnalysisResult, TraceStep } from '../lib/types';
 import { analyzeStream, analyzeImages } from '../lib/api';
+import { 
+  ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen,
+  PanelRightClose, PanelRightOpen, Layers, MessageSquareCode, ShieldCheck
+} from 'lucide-react';
 
 const Workspace: React.FC = () => {
   const [files, setFiles] = useState<UploadedFile[]>([]);
@@ -14,8 +18,11 @@ const Workspace: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [traceSteps, setTraceSteps] = useState<TraceStep[]>([]);
-  const [traceExpanded, setTraceExpanded] = useState<boolean>(false);
   const [focusedRegion, setFocusedRegion] = useState<number[] | null>(null);
+
+  // Responsive Drawer/Panel Collapse States for Hero Imagery Viewport
+  const [leftCollapsed, setLeftCollapsed] = useState<boolean>(false);
+  const [rightCollapsed, setRightCollapsed] = useState<boolean>(false);
 
   // Map human-readable mode to backend input_mode
   const getBackendInputMode = (m: string) => {
@@ -115,7 +122,6 @@ const Workspace: React.FC = () => {
     setIsAnalyzing(true);
     setResult(null);
     setTraceSteps([]);
-    setTraceExpanded(true);
     setFocusedRegion(null);
 
     const inputMode = getBackendInputMode(mode);
@@ -184,44 +190,112 @@ const Workspace: React.FC = () => {
       {/* Premium Mission Header */}
       <TopBar />
       
-      {/* 3-Column Command Grid Layout */}
-      <div className="flex-1 grid grid-cols-[290px_1fr_360px] h-[calc(100vh-3.5rem)] relative overflow-hidden">
-        {/* Left: Mission Input & Mode Selection */}
-        <InputPanel 
-          files={files} 
-          setFiles={setFiles} 
-          mode={mode} 
-          setMode={setMode} 
-          onLoadDemo={handleLoadDemo}
-        />
+      {/* Dynamic 3-Column Command Grid Layout (Visualization occupies 65-75% standard, up to 90%+ when sidebars are collapsed) */}
+      <div 
+        className="flex-1 grid h-[calc(100vh-3.5rem)] relative overflow-hidden transition-all duration-200"
+        style={{
+          gridTemplateColumns: `${leftCollapsed ? '44px' : '265px'} 1fr ${rightCollapsed ? '44px' : '340px'}`
+        }}
+      >
+        {/* Left: Mission Input & Mode Selection (or Collapsed Dock) */}
+        {leftCollapsed ? (
+          <div className="h-full bg-space-950 border-r border-space-700 flex flex-col items-center py-3 space-y-4 select-none">
+            <button
+              onClick={() => setLeftCollapsed(false)}
+              className="p-1.5 text-hud-muted hover:text-emerald hover:bg-space-850 rounded-xs transition-colors"
+              title="Expand Input Dock"
+            >
+              <PanelLeftOpen size={16} />
+            </button>
+            <div className="w-6 h-px bg-space-700"></div>
+            <div className="flex flex-col items-center space-y-2">
+              <span className="text-[10px] font-mono text-emerald font-bold [writing-mode:vertical-lr] rotate-180 uppercase tracking-widest">
+                INPUTS ({files.length})
+              </span>
+              <Layers size={14} className="text-hud-subtle" />
+            </div>
+          </div>
+        ) : (
+          <div className="relative h-full flex flex-col overflow-hidden">
+            {/* Collapse button on left panel */}
+            <button
+              onClick={() => setLeftCollapsed(true)}
+              className="absolute top-2 right-2 z-30 p-1 text-hud-muted hover:text-emerald hover:bg-space-850 rounded-xs transition-colors"
+              title="Collapse Input Dock"
+            >
+              <PanelLeftClose size={14} />
+            </button>
+            <InputPanel 
+              files={files} 
+              setFiles={setFiles} 
+              mode={mode} 
+              setMode={setMode} 
+              onLoadDemo={handleLoadDemo}
+            />
+          </div>
+        )}
         
-        {/* Center: Hero Imagery Viewport + Bottom Trace Drawer */}
+        {/* Center: Hero Imagery Viewport + Expandable Bottom Analytics Shelf */}
         <div className="relative flex flex-col h-full bg-space-950 border-r border-space-700 overflow-hidden">
-          <ImageViewer 
-            files={files} 
-            mode={mode} 
-            focusedRegion={focusedRegion}
-            evidenceItems={result?.evidence || []}
-          />
-          <ExecutionTrace 
-            steps={traceSteps} 
-            isExpanded={traceExpanded} 
-            setIsExpanded={setTraceExpanded} 
-          />
-        </div>
-        
-        {/* Right: Command Input & Intelligence Briefing Panel */}
-        <div className="flex flex-col h-full bg-space-900 overflow-hidden">
-          <QueryPanel 
-            mode={mode} 
-            isAnalyzing={isAnalyzing} 
-            onAnalyze={handleAnalyze} 
-          />
-          <ResultPanel 
-            result={result} 
+          {/* Main Visualizer Canvas */}
+          <div className="flex-1 relative overflow-hidden">
+            <ImageViewer 
+              files={files} 
+              mode={mode} 
+              focusedRegion={focusedRegion}
+              evidenceItems={result?.evidence || []}
+            />
+          </div>
+
+          {/* Integrated Expandable Analytics & Trace Shelf */}
+          <AnalyticsShelf
+            files={files}
+            mode={mode}
+            result={result}
+            traceSteps={traceSteps}
             onFocusRegion={handleFocusRegion}
           />
         </div>
+        
+        {/* Right: Command Input & Intelligence Briefing Panel (or Collapsed Dock) */}
+        {rightCollapsed ? (
+          <div className="h-full bg-space-950 border-l border-space-700 flex flex-col items-center py-3 space-y-4 select-none">
+            <button
+              onClick={() => setRightCollapsed(false)}
+              className="p-1.5 text-hud-muted hover:text-emerald hover:bg-space-850 rounded-xs transition-colors"
+              title="Expand Intelligence Panel"
+            >
+              <PanelRightOpen size={16} />
+            </button>
+            <div className="w-6 h-px bg-space-700"></div>
+            <div className="flex flex-col items-center space-y-2">
+              <span className="text-[10px] font-mono text-emerald font-bold [writing-mode:vertical-lr] rotate-180 uppercase tracking-widest">
+                INTEL BRIEFING
+              </span>
+              <ShieldCheck size={14} className="text-emerald" />
+            </div>
+          </div>
+        ) : (
+          <div className="relative h-full flex flex-col bg-space-900 overflow-hidden">
+            {/* Collapse button on right panel */}
+            <button
+              onClick={() => setRightCollapsed(true)}
+              className="absolute top-2 right-2 z-30 p-1 text-hud-muted hover:text-emerald hover:bg-space-850 rounded-xs transition-colors"
+              title="Collapse Intelligence Panel"
+            >
+              <PanelRightClose size={14} />
+            </button>
+            <QueryPanel 
+              mode={mode} 
+              isAnalyzing={isAnalyzing} 
+              onAnalyze={handleAnalyze} 
+            />
+            <ResultPanel 
+              result={result} 
+              onFocusRegion={handleFocusRegion}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

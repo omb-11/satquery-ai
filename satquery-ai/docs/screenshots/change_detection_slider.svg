@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" style="background:#030504;font-family:'JetBrains Mono',monospace;">
+  <defs>
+    <radialGradient id="cdGlow" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0e1711" />
+      <stop offset="100%" stop-color="#030504" />
+    </radialGradient>
+    <filter id="laserGlow">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#cdGlow)" />
+
+  <!-- Top Bar -->
+  <rect x="0" y="0" width="1280" height="48" fill="#070a08" stroke="#16221a" stroke-width="1" />
+  <circle cx="24" cy="24" r="6" fill="#00ff87" />
+  <text x="38" y="29" fill="#00ff87" font-weight="bold" font-size="16" letter-spacing="2">SATQUERY AI</text>
+  <text x="175" y="28" fill="#607b6d" font-size="11">| BI-TEMPORAL CHANGE DETECTION ENGINE</text>
+  <text x="520" y="28" fill="#ffaa00" font-size="12" letter-spacing="1">MODE: CO-REGISTERED SATELLITE PAIR (T₁ ↔ T₂)</text>
+
+  <!-- Main Viewport Arena -->
+  <rect x="60" y="70" width="860" height="600" rx="4" fill="#060907" stroke="#1c2d22" stroke-width="2" />
+
+  <!-- Left Side: T1 (Before) -->
+  <g clip-path="url(#leftClip)">
+    <clipPath id="leftClip">
+      <rect x="60" y="70" width="430" height="600" />
+    </clipPath>
+    <!-- Pristine Vegetation Landscape -->
+    <rect x="60" y="70" width="860" height="600" fill="#142c1c" />
+    <path d="M 60 200 Q 300 280 490 220 T 920 180 L 920 70 L 60 70 Z" fill="#1d3d28" />
+    <path d="M 60 500 Q 280 420 520 480 T 920 440 L 920 670 L 60 670 Z" fill="#0f2216" />
+    <!-- Small natural pond -->
+    <ellipse cx="280" cy="340" rx="80" ry="50" fill="#0e2333" />
+  </g>
+
+  <!-- Right Side: T2 (After) -->
+  <g clip-path="url(#rightClip)">
+    <clipPath id="rightClip">
+      <rect x="490" y="70" width="430" height="600" />
+    </clipPath>
+    <!-- Altered Landscape with New Construction & Urban Growth -->
+    <rect x="60" y="70" width="860" height="600" fill="#1e241f" />
+    <path d="M 60 200 Q 300 280 490 220 T 920 180 L 920 70 L 60 70 Z" fill="#2d382f" />
+    <path d="M 60 500 Q 280 420 520 480 T 920 440 L 920 670 L 60 670 Z" fill="#151b16" />
+    <!-- Built-up blocks and cleared land -->
+    <g fill="#614a38" stroke="#3d2c20" stroke-width="1">
+      <rect x="520" y="240" width="120" height="80" />
+      <rect x="660" y="210" width="140" height="110" />
+      <rect x="580" y="380" width="180" height="90" />
+    </g>
+    <!-- Road network cuts -->
+    <path d="M 490 320 L 920 310" stroke="#8c7865" stroke-width="12" />
+    <path d="M 640 70 L 650 670" stroke="#8c7865" stroke-width="10" />
+    
+    <!-- Change Detection Heatmap Highlights -->
+    <rect x="510" y="200" width="310" height="290" fill="rgba(255, 68, 68, 0.25)" stroke="#ff4444" stroke-width="2" stroke-dasharray="6 3" />
+    <rect x="510" y="176" width="190" height="22" fill="#070a08" stroke="#ff4444" stroke-width="1" />
+    <text x="518" y="191" fill="#ff4444" font-size="11" font-weight="bold">DISTURBANCE: +18.4%</text>
+  </g>
+
+  <!-- Interactive Green Laser Splitter Line -->
+  <line x1="490" y1="70" x2="490" y2="670" stroke="#00ff87" stroke-width="3" filter="url(#laserGlow)" />
+  
+  <!-- Slider Handle -->
+  <circle cx="490" cy="370" r="18" fill="#070a08" stroke="#00ff87" stroke-width="3" filter="url(#laserGlow)" />
+  <path d="M 482 370 L 486 366 M 482 370 L 486 374 M 498 370 L 494 366 M 498 370 L 494 374" stroke="#00ff87" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Baseline & Revisit Tags -->
+  <rect x="80" y="90" width="170" height="28" rx="2" fill="#070a08" stroke="#00ff87" stroke-width="1" />
+  <text x="92" y="108" fill="#00ff87" font-size="11" font-weight="bold">T₁ BASELINE (2025)</text>
+
+  <rect x="730" y="90" width="170" height="28" rx="2" fill="#070a08" stroke="#ffaa00" stroke-width="1" />
+  <text x="742" y="108" fill="#ffaa00" font-size="11" font-weight="bold">T₂ REVISIT (2026)</text>
+
+  <!-- Right Telemetry Panel -->
+  <rect x="940" y="70" width="280" height="600" rx="4" fill="#060907" stroke="#1c2d22" stroke-width="1" />
+  <text x="960" y="104" fill="#00ff87" font-size="12" font-weight="bold">TEMPORAL ANALYTICS</text>
+
+  <!-- Otsu Thresholding Metric -->
+  <g transform="translate(960, 130)">
+    <rect width="240" height="70" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="12" y="22" fill="#849b8d" font-size="10">NET CHANGE DETECTED</text>
+    <text x="12" y="52" fill="#ff4444" font-size="24" font-weight="bold">18.4%</text>
+    <text x="90" y="48" fill="#a4c2b2" font-size="10">42.6 Hectares</text>
+  </g>
+
+  <!-- Dominant Transition -->
+  <g transform="translate(960, 215)">
+    <rect width="240" height="90" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="12" y="22" fill="#849b8d" font-size="10">DOMINANT SHIFT</text>
+    <text x="12" y="44" fill="#00ff87" font-size="12" font-weight="bold">Canopy Loss → Built-up</text>
+    <text x="12" y="66" fill="#607b6d" font-size="10">Radiometric Delta: +68 DN</text>
+    <text x="12" y="80" fill="#607b6d" font-size="10">Morphology: Connected Poly</text>
+  </g>
+
+  <!-- Co-Registration Quality -->
+  <g transform="translate(960, 320)">
+    <rect width="240" height="70" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="12" y="22" fill="#849b8d" font-size="10">CO-REGISTRATION SCORE</text>
+    <text x="12" y="52" fill="#00ff87" font-size="22" font-weight="bold">98.5%</text>
+    <text x="90" y="48" fill="#00ff87" font-size="10">Sub-pixel Alignment</text>
+  </g>
+
+  <!-- Detected Regions List -->
+  <text x="960" y="425" fill="#849b8d" font-size="10" font-weight="bold">DETECTED REGIONS (4)</text>
+  
+  <g transform="translate(960, 440)">
+    <rect width="240" height="42" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="10" y="18" fill="#ffffff" font-size="10">REG-01: Commercial Site</text>
+    <text x="10" y="32" fill="#ff4444" font-size="9">Area: 18.2 ha | Conf: 94%</text>
+
+    <rect y="50" width="240" height="42" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="10" y="68" fill="#ffffff" font-size="10">REG-02: Arterial Roadway</text>
+    <text x="10" y="82" fill="#ffaa00" font-size="9">Area: 9.4 ha | Conf: 89%</text>
+
+    <rect y="100" width="240" height="42" rx="2" fill="#0b120d" stroke="#16221a" />
+    <text x="10" y="118" fill="#ffffff" font-size="10">REG-03: Land Clearing</text>
+    <text x="10" y="132" fill="#ffaa00" font-size="9">Area: 15.0 ha | Conf: 88%</text>
+  </g>
+
+  <!-- Bottom Interactive Mode Switcher -->
+  <g transform="translate(100, 620)">
+    <rect width="320" height="34" rx="2" fill="#090e0b" stroke="#00ff87" stroke-width="1" />
+    <text x="16" y="22" fill="#00ff87" font-size="11" font-weight="bold">ACTIVE: SWIPE</text>
+    <text x="120" y="22" fill="#607b6d" font-size="11">BLINK</text>
+    <text x="180" y="22" fill="#607b6d" font-size="11">OVERLAY</text>
+    <text x="250" y="22" fill="#607b6d" font-size="11">HEATMAP</text>
+  </g>
+</svg>

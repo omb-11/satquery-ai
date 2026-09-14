@@ -12,7 +12,7 @@ export interface UploadedFile {
 export interface TraceStep {
   step_num: number;
   name: string;
-  status: 'running' | 'success' | 'error';
+  status: 'running' | 'success' | 'done' | 'error' | 'skipped';
   tool: string;
   output: string;
   elapsed_ms: number;
@@ -44,6 +44,8 @@ export interface AnalysisResult {
   models_used: string[];
   parameters: Record<string, any>;
   limitations: string | string[];
+  tool_results?: Record<string, any>;
+  input_metadata?: any[];
   trace: TraceStep[];
   processing_times: Record<string, number>;
 }
