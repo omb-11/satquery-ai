@@ -5,9 +5,11 @@ services:
     region: singapore
     plan: free
     rootDir: satquery-ai
-    buildCommand: pip install --upgrade pip && pip install -r backend/requirements.txt
+    buildCommand: pip install --upgrade pip && pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r backend/requirements.txt
     startCommand: python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: PYTHONPATH
         value: .
       - key: PYTHONUNBUFFERED
