@@ -1,0 +1,56 @@
+# SatQuery AI Backend Dependencies
+# Core
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# Geospatial
+rasterio==1.3.10
+shapely==2.0.4
+pyproj==3.6.1
+numpy==1.26.4
+scipy==1.13.0
+
+# Image Processing
+Pillow==10.3.0
+opencv-python-headless==4.9.0.80
+scikit-image==0.23.2
+matplotlib==3.8.4
+
+# ML / Inference (CPU-optimized)
+torch==2.3.0
+torchvision==0.18.0
+transformers==4.41.0
+accelerate==0.30.0
+sentencepiece==0.2.0
+tokenizers==0.19.1
+
+# Data
+pandas==2.2.2
+scikit-learn==1.4.2
+
+# Database
+aiosqlite==0.20.0
+sqlalchemy==2.0.30
+
+# Reports
+reportlab==4.2.0
+jinja2==3.1.4
+
+# Utilities
+python-dotenv==1.0.1
+aiofiles==23.2.1
+httpx==0.27.0
+tenacity==8.3.0
+loguru==0.7.2
+psutil==5.9.8
+filelock==3.14.0
+tqdm==4.66.4
+xxhash==3.4.1
+
+# Testing
+pytest==8.2.0
+pytest-asyncio==0.23.7
+httpx==0.27.0

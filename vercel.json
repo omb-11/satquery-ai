@@ -1,0 +1,8 @@
+{
+  "framework": "vite",
+  "buildCommand": "cd satquery-ai/frontend && npm install && npm run build",
+  "outputDirectory": "satquery-ai/frontend/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

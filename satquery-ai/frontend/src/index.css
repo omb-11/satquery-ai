@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #030504;
+    color: #f1f5f2;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #070a08;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #1f2d24;
+    border-radius: 2px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #00ff87;
+  }
+}
+
+/* Faint technical geospatial grid pattern */
+.bg-command-grid {
+  background-color: #030504;
+  background-image: 
+    linear-gradient(to right, rgba(0, 255, 135, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 255, 135, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-telemetry-dots {
+  background-image: radial-gradient(rgba(0, 255, 135, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphism panel styling */
+.glass-panel {
+  background: rgba(7, 10, 8, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 255, 135, 0.12);
+}
+
+.glass-panel-elevated {
+  background: rgba(12, 18, 14, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 255, 135, 0.2);
+}
+
+/* Telemetry scanline effect */
+@keyframes radarSweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+.animate-scanline {
+  animation: radarSweep 6s linear infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}

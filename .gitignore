@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+**/venv/
+ENV/
+*.egg-info/
+dist/
+**/dist/
+build/
+**/build/
+.pytest_cache/
+**/.pytest_cache/
+
+# Node
+node_modules/
+**/node_modules/
+.npm
+npm-debug.log*
+
+# SatQuery data
+data/uploads/
+**/data/uploads/
+data/satquery.db
+**/data/satquery.db
+data/*.log
+**/data/*.log
+models/cache/
+**/models/cache/
+
+# Environment
+.env
+**/.env
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
