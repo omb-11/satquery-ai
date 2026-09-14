@@ -15,11 +15,17 @@ export const uploadFiles = async (files: File[]) => {
   return response.data;
 };
 
-export const analyzeImages = async (query: string, fileIds: string[], inputMode: string): Promise<AnalysisResult> => {
+export const analyzeImages = async (
+  query: string, 
+  fileIds: string[], 
+  inputMode: string,
+  parameters?: Record<string, any>
+): Promise<AnalysisResult> => {
   const response = await api.post('/analyze', {
     query,
     file_ids: fileIds,
-    input_mode: inputMode
+    input_mode: inputMode,
+    parameters: parameters || {}
   });
   return response.data;
 };
@@ -30,7 +36,8 @@ export const analyzeStream = async (
   inputMode: string,
   onStep: (step: any) => void,
   onComplete: (result: AnalysisResult) => void,
-  onError: (error: any) => void
+  onError: (error: any) => void,
+  parameters?: Record<string, any>
 ) => {
   try {
     const response = await fetch('/api/v1/analyze/stream', {
@@ -39,7 +46,8 @@ export const analyzeStream = async (
       body: JSON.stringify({
         query,
         file_ids: fileIds,
-        input_mode: inputMode
+        input_mode: inputMode,
+        parameters: parameters || {}
       }),
     });
 
@@ -115,3 +123,29 @@ export const getReport = async (id: string) => {
 export const getReportHtmlUrl = (id: string) => {
   return `/api/v1/reports/${id}`;
 };
+
+export const getGeminiSettings = async () => {
+  const response = await api.get('/settings/gemini');
+  return response.data;
+};
+
+export const updateGeminiSettings = async (apiKey: string, model: string) => {
+  const response = await api.post('/settings/gemini', { api_key: apiKey, model });
+  return response.data;
+};
+
+export const testGeminiConnection = async (apiKey?: string, model?: string) => {
+  const response = await api.post('/settings/gemini/test', { api_key: apiKey, model });
+  return response.data;
+};
+
+export const getPrecisionSettings = async () => {
+  const response = await api.get('/settings/precision');
+  return response.data;
+};
+
+export const updatePrecisionSettings = async (precisionMode: string) => {
+  const response = await api.post('/settings/precision', { precision_mode: precisionMode });
+  return response.data;
+};
+

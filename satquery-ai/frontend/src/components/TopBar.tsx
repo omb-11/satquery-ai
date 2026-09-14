@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Cpu, Database, Server, Play, ChevronRight, Sliders, Shield } from 'lucide-react';
+import { Cpu, Database, Server, Play, ChevronRight, Sliders, Shield, Sparkles } from 'lucide-react';
 import SystemStatus from './SystemStatus';
+import GeminiConfigModal from './GeminiConfigModal';
+import { getGeminiSettings } from '../lib/api';
 
 const TopBar: React.FC = () => {
   const [showStatus, setShowStatus] = useState(false);
+  const [showGeminiModal, setShowGeminiModal] = useState(false);
+  const [geminiReady, setGeminiReady] = useState(false);
+
+  useEffect(() => {
+    checkGeminiStatus();
+  }, []);
+
+  const checkGeminiStatus = async () => {
+    try {
+      const res = await getGeminiSettings();
+      setGeminiReady(Boolean(res?.configured));
+    } catch {
+      setGeminiReady(false);
+    }
+  };
 
   return (
     <header className="h-14 border-b border-space-700 bg-space-950/95 backdrop-blur-md flex items-center justify-between px-4 text-sm shrink-0 z-30 select-none relative">
@@ -75,6 +92,17 @@ const TopBar: React.FC = () => {
           ))}
         </nav>
 
+        {/* Gemini AI Analyst Status & Config button */}
+        <button
+          onClick={() => setShowGeminiModal(true)}
+          className="flex items-center space-x-1.5 px-2.5 py-1 bg-space-850 hover:bg-space-800 text-hud-text hover:text-emerald border border-space-700 hover:border-emerald/50 text-xs font-mono font-bold tracking-wider rounded-xs transition-all shadow-glow-sm"
+          title="Configure Gemini AI Multimodal Analyst"
+        >
+          <Sparkles size={12} className={geminiReady ? "text-emerald" : "text-telemetry-amber"} />
+          <span>{geminiReady ? "GEMINI AI" : "AI ANALYST"}</span>
+          <span className={`w-1.5 h-1.5 rounded-full ${geminiReady ? "bg-emerald animate-pulse shadow-glow-sm" : "bg-telemetry-amber"}`}></span>
+        </button>
+
         {/* Prominent JUDGE MODE button */}
         <Link
           to="/demo"
@@ -117,6 +145,12 @@ const TopBar: React.FC = () => {
           )}
         </div>
       </div>
+
+      <GeminiConfigModal
+        isOpen={showGeminiModal}
+        onClose={() => setShowGeminiModal(false)}
+        onSettingsUpdated={checkGeminiStatus}
+      />
     </header>
   );
 };

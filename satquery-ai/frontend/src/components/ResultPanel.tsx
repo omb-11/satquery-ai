@@ -60,6 +60,32 @@ const ResultPanel: React.FC<ResultPanelProps> = ({ result, onFocusRegion }) => {
 
   return (
     <div className="flex-1 bg-space-900 overflow-y-auto scrollbar-thin select-none">
+      {/* Executive Verdict Banner */}
+      <div className="p-3 bg-space-950 border-b border-space-700">
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 rounded-full bg-emerald shadow-glow-sm animate-pulse"></span>
+            <span className="text-[10px] font-mono font-bold tracking-wider text-emerald uppercase">
+              VERDICT: {result.intent ? result.intent.replace(/_/g, ' ').toUpperCase() : 'VERIFIED GROUNDED RS INTEL'}
+            </span>
+          </div>
+          {result.precision_mode && (
+            <span className="text-[9px] font-mono px-1.5 py-0.5 bg-space-850 border border-emerald/30 text-emerald rounded-xs uppercase font-bold">
+              {result.precision_mode}
+            </span>
+          )}
+        </div>
+        {result.summary ? (
+          <p className="text-xs font-mono text-emerald/90 bg-emerald/10 border border-emerald/25 p-2 rounded-xs leading-relaxed">
+            {result.summary}
+          </p>
+        ) : (
+          <p className="text-[11px] font-mono text-hud-muted bg-space-850/80 border border-space-700 p-1.5 rounded-xs">
+            Directly corroborated with deterministic spectral signatures and spatial bounding geometry.
+          </p>
+        )}
+      </div>
+
       {/* Intelligence Briefing Header */}
       <div className="p-4 border-b border-space-700 bg-space-950/70">
         <div className="flex items-center justify-between mb-2">

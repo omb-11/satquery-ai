@@ -42,9 +42,31 @@ class AgentOrchestrator:
         state.trace.append(step)
         logger.info(f"[{step_num:02d}] {name} | {tool} | {elapsed_ms:.0f}ms | {output[:80]}")
 
-    async def analyze(self, query: str, input_paths: list[str], input_mode: str) -> AgentState:
+    async def analyze(
+        self, query: str, input_paths: list[str], input_mode: str, parameters: dict = None
+    ) -> AgentState:
         """Run full analysis pipeline. Returns completed AgentState."""
         t_total = time.time()
+        from backend.core.config import settings
+        
+        initial_params = dict(parameters or {})
+        prec_mode = initial_params.get("precision_mode", settings.precision_mode or "balanced")
+        initial_params["precision_mode"] = prec_mode
+        
+        # Configure precision-specific thresholds
+        if prec_mode == "fast":
+            initial_params.setdefault("target_dim", 512)
+            initial_params.setdefault("threshold", 0.20)
+            initial_params.setdefault("min_area_px", 100)
+        elif prec_mode == "precise":
+            initial_params.setdefault("target_dim", 1536)
+            initial_params.setdefault("threshold", 0.10)
+            initial_params.setdefault("min_area_px", 25)
+        else: # balanced or expert
+            initial_params.setdefault("target_dim", 1024)
+            initial_params.setdefault("threshold", 0.15)
+            initial_params.setdefault("min_area_px", 50)
+
         state = AgentState(
             run_id=str(uuid.uuid4()),
             query=query,
@@ -59,7 +81,7 @@ class AgentOrchestrator:
             final_answer="",
             findings=[],
             models_used=[],
-            parameters={},
+            parameters=initial_params,
             limitations=[],
             trace=[],
             status="running",
@@ -67,6 +89,8 @@ class AgentOrchestrator:
             created_at=datetime.utcnow().isoformat(),
             completed_at="",
             processing_times={},
+            precision_mode=prec_mode,
+            tools_used=[]
         )
 
         try:
@@ -350,15 +374,44 @@ class AgentOrchestrator:
                             str(e), (time.time() - t0) * 1000)
             step += 1
 
-            # ── Step 11: Answer Synthesis ─────────────────────────────────
+            # ── Step 11: Answer Synthesis (Gemini Analyst with Local Fallback) ──
             t0 = time.time()
             try:
                 from backend.agents.synthesizer import AnswerSynthesizer
                 synth = AnswerSynthesizer()
-                state.final_answer = synth.synthesize(state)
-                self._trace(state, step, "Answer Synthesis", "done", "AnswerSynthesizer",
-                            "Evidence-backed response ready",
-                            (time.time() - t0) * 1000)
+                local_answer = synth.synthesize(state)
+                state.final_answer = local_answer
+                
+                # Check for Gemini AI Analyst
+                try:
+                    from backend.inference.gemini import GeminiAnalyst
+                    gemini = GeminiAnalyst()
+                    if gemini.is_configured():
+                        briefing = await gemini.synthesize_briefing(
+                            query, state.task_type, state.tool_results, state.evidence,
+                            state.confidence, state.input_metadata, state.parameters
+                        )
+                        if briefing and briefing.get("answer"):
+                            state.final_answer = briefing["answer"]
+                            state.summary = briefing.get("summary", "")
+                            state.intent = briefing.get("intent", "")
+                            state.models_used.append(f"Google {gemini.model} (Analyst)")
+                            self._trace(state, step, "Intelligence Synthesis", "done",
+                                        f"Gemini {gemini.model}", "Structured evidence-backed briefing",
+                                        (time.time() - t0) * 1000)
+                        else:
+                            self._trace(state, step, "Answer Synthesis", "done", "AnswerSynthesizer",
+                                        "Evidence-backed response ready (local engine)",
+                                        (time.time() - t0) * 1000)
+                    else:
+                        self._trace(state, step, "Answer Synthesis", "done", "AnswerSynthesizer",
+                                    "Evidence-backed response ready (deterministic fallback)",
+                                    (time.time() - t0) * 1000)
+                except Exception as gem_e:
+                    logger.debug(f"Gemini analyst bypassed: {gem_e}")
+                    self._trace(state, step, "Answer Synthesis", "done", "AnswerSynthesizer",
+                                "Evidence-backed response ready",
+                                (time.time() - t0) * 1000)
             except Exception as e:
                 logger.error(f"Synthesis error: {e}")
                 state.final_answer = self._fallback_answer(state)
@@ -382,6 +435,31 @@ class AgentOrchestrator:
                             str(e), (time.time() - t0) * 1000)
             step += 1
 
+            # ── Step 13: Spatial Focus & Visualization Planning ──────────
+            t0 = time.time()
+            try:
+                from backend.tools.spatial_focus import SpatialFocusEngine
+                from backend.tools.visualization_planner import VisualizationPlanner
+                
+                sfe = SpatialFocusEngine()
+                state.spatial_focus = sfe.extract_focus(query, state.evidence, state.input_metadata)
+                
+                vp = VisualizationPlanner()
+                v_plan = vp.plan(query, input_mode, state.tool_results, state.evidence, state.input_metadata, state.parameters)
+                state.visualizations = v_plan.get("visualizations", [])
+                state.charts = v_plan.get("charts", [])
+                state.follow_up_questions = v_plan.get("follow_up_questions", [])
+                state.tools_used = list(set(state.selected_tools + [t.tool for t in state.trace]))
+                
+                self._trace(state, step, "Visualization Planning", "done", "VisualizationPlanner",
+                            f"{len(state.visualizations)} views & {len(state.charts)} charts planned",
+                            (time.time() - t0) * 1000)
+            except Exception as e:
+                logger.warning(f"Visualization planning warning: {e}")
+                self._trace(state, step, "Visualization Planning", "skipped", "VisualizationPlanner",
+                            str(e), (time.time() - t0) * 1000)
+            step += 1
+
             state.status = "complete"
 
         except Exception as e:
@@ -400,7 +478,7 @@ class AgentOrchestrator:
         return state
 
     async def analyze_stream(
-        self, query: str, input_paths: list[str], input_mode: str
+        self, query: str, input_paths: list[str], input_mode: str, parameters: dict = None
     ) -> AsyncGenerator[str, None]:
         """Run analysis and yield SSE JSON strings for each trace step."""
         import json
@@ -408,13 +486,12 @@ class AgentOrchestrator:
 
         # Patch trace to yield events as steps are added
         events_queue: asyncio.Queue = asyncio.Queue()
-        original_trace = []
 
         # Run analyze in a task and stream trace steps
         state_holder = {}
 
         async def run_analysis():
-            state = await self.analyze(query, input_paths, input_mode)
+            state = await self.analyze(query, input_paths, input_mode, parameters=parameters)
             state_holder["state"] = state
             await events_queue.put(None)  # sentinel
 

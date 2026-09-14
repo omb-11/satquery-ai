@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from typing import List, Dict, Optional, Any
 
 @dataclass
@@ -59,8 +59,23 @@ class AgentState:
     created_at: str
     completed_at: str
     processing_times: Dict[str, float]
+    # Enhanced structured fields
+    intent: str = ""
+    summary: str = ""
+    visualizations: List[Dict[str, Any]] = field(default_factory=list)
+    charts: List[Dict[str, Any]] = field(default_factory=list)
+    spatial_focus: List[Dict[str, Any]] = field(default_factory=list)
+    tools_used: List[str] = field(default_factory=list)
+    follow_up_questions: List[str] = field(default_factory=list)
+    precision_mode: str = "balanced"
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
         d["answer"] = self.final_answer
+        d["task"] = self.task_type
+        if not d.get("summary"):
+            d["summary"] = self.final_answer.split("\n")[0] if self.final_answer else ""
+        if not d.get("tools_used"):
+            d["tools_used"] = self.selected_tools
         return d
+

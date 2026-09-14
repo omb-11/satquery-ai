@@ -5,9 +5,9 @@ Real analysis using the AgentOrchestrator.
 from __future__ import annotations
 import json
 import uuid
-from pathlib import Path
 from datetime import datetime
-from typing import List, Any
+from pathlib import Path
+from typing import List, Any, Optional
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends
 from fastapi.responses import StreamingResponse
@@ -26,6 +26,7 @@ class AnalyzeRequest(BaseModel):
     query: str
     file_ids: List[str]
     input_mode: str = "single"  # single | bitemporal | optical_sar
+    parameters: Optional[dict] = None
 
 
 async def resolve_paths(file_ids: List[str], db: AsyncSession) -> List[str]:
@@ -116,7 +117,9 @@ async def analyze_sync(request: AnalyzeRequest, db: AsyncSession = Depends(get_d
     logger.info(f"Analyzing: mode={request.input_mode}, query='{request.query[:60]}', paths={paths}")
 
     orchestrator = AgentOrchestrator()
-    state = await orchestrator.analyze(request.query, paths, request.input_mode)
+    state = await orchestrator.analyze(
+        request.query, paths, request.input_mode, parameters=request.parameters
+    )
 
     await save_run(state, db)
 
@@ -143,7 +146,7 @@ async def analyze_stream(request: AnalyzeRequest, db: AsyncSession = Depends(get
     async def event_generator():
         try:
             async for event_json in orchestrator.analyze_stream(
-                request.query, paths, request.input_mode
+                request.query, paths, request.input_mode, parameters=request.parameters
             ):
                 yield f"data: {event_json}\n\n"
 

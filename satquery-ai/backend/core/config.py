@@ -46,13 +46,21 @@ class Settings(BaseSettings):
     max_change_regions: int = 20
     confidence_min_threshold: float = 0.3
 
+    # Gemini AI Analyst
+    gemini_api_key: str = Field(default="", env="GEMINI_API_KEY")
+    gemini_model: str = Field(default="gemini-1.5-flash", env="GEMINI_MODEL")
+
+    # Precision & Execution Mode: fast | balanced | precise | expert
+    precision_mode: str = "balanced"
+
     # API
     api_prefix: str = "/api/v1"
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000", "https://sqai-psi.vercel.app"]
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
     def get_device(self) -> str:
         if self.device != "auto":

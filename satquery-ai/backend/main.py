@@ -53,6 +53,7 @@ from backend.api.routes.runs import router as runs_router
 from backend.api.routes.reports import router as reports_router
 from backend.api.routes.benchmark import router as benchmark_router
 from backend.api.routes.training import router as training_router
+from backend.api.routes.settings import router as settings_router
 
 prefix = settings.api_prefix
 
@@ -66,6 +67,7 @@ app.include_router(runs_router, prefix=prefix)
 app.include_router(reports_router, prefix=prefix)
 app.include_router(benchmark_router, prefix=prefix)
 app.include_router(training_router, prefix=prefix)
+app.include_router(settings_router, prefix=prefix)
 
 # Serve uploaded data as static files (with fallback)
 import os

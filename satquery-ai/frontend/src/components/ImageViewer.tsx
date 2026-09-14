@@ -12,13 +12,15 @@ interface ImageViewerProps {
   mode: string;
   focusedRegion?: number[] | null;
   evidenceItems?: any[];
+  onAskAboutRegion?: (query: string) => void;
 }
 
 const ImageViewer: React.FC<ImageViewerProps> = ({ 
   files, 
   mode, 
   focusedRegion,
-  evidenceItems = []
+  evidenceItems = [],
+  onAskAboutRegion
 }) => {
   const [activeTab, setActiveTab] = useState('ORIGINAL');
   const [zoom, setZoom] = useState(1);
@@ -560,6 +562,24 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
                     </g>
                   )}
                 </svg>
+              )}
+
+              {/* Interactive Ask About This Region Action */}
+              {focusedRegion && onAskAboutRegion && (
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 animate-in fade-in slide-in-from-bottom-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const [x1, y1, x2, y2] = focusedRegion;
+                      onAskAboutRegion(`Inspect target region [${x1.toFixed(2)}, ${y1.toFixed(2)}, ${x2.toFixed(2)}, ${y2.toFixed(2)}] in detail.`);
+                    }}
+                    className="px-3 py-1.5 bg-emerald hover:bg-emerald-glow text-space-950 font-mono text-xs font-bold tracking-wider rounded-xs shadow-glow-md flex items-center space-x-1.5 transition-all"
+                  >
+                    <Crosshair size={13} />
+                    <span>ASK ABOUT THIS REGION</span>
+                  </button>
+                </div>
               )}
             </div>
           )}

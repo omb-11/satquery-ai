@@ -5,10 +5,24 @@ interface QueryPanelProps {
   mode: string;
   isAnalyzing: boolean;
   onAnalyze: (query: string) => void;
+  externalQuery?: string;
+  followUpQuestions?: string[];
 }
 
-const QueryPanel: React.FC<QueryPanelProps> = ({ mode, isAnalyzing, onAnalyze }) => {
+const QueryPanel: React.FC<QueryPanelProps> = ({ 
+  mode, 
+  isAnalyzing, 
+  onAnalyze,
+  externalQuery,
+  followUpQuestions = []
+}) => {
   const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    if (externalQuery) {
+      setQuery(externalQuery);
+    }
+  }, [externalQuery]);
 
   const suggestions = {
     'SINGLE IMAGE': [
@@ -109,11 +123,35 @@ const QueryPanel: React.FC<QueryPanelProps> = ({ mode, isAnalyzing, onAnalyze })
         </button>
       </form>
 
+      {/* Follow-up Exploration Chips */}
+      {followUpQuestions && followUpQuestions.length > 0 && (
+        <div className="space-y-1.5 pt-1 border-t border-space-700/80">
+          <div className="flex items-center space-x-1.5 text-[10px] font-mono text-emerald font-bold">
+            <Sparkles size={11} className="text-emerald animate-pulse" />
+            <span>Recommended Follow-up Investigations:</span>
+          </div>
+          <div className="flex flex-col space-y-1">
+            {followUpQuestions.map((fq, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setQuery(fq)}
+                className="text-left text-[11px] font-mono px-2 py-1.5 rounded-xs bg-emerald/10 hover:bg-emerald/20 border border-emerald/40 hover:border-emerald text-emerald hover:text-emerald-glow transition-all"
+                title={fq}
+              >
+                <span className="font-bold mr-1.5">⚡</span>
+                {fq}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Suggested Query Chips */}
       <div className="space-y-1.5 pt-1">
         <div className="flex items-center space-x-1.5 text-[10px] font-mono text-hud-muted">
-          <Sparkles size={11} className="text-emerald" />
-          <span>Recommended Queries:</span>
+          <Sparkles size={11} className="text-hud-subtle" />
+          <span>Preset Domain Queries:</span>
         </div>
         <div className="flex flex-col space-y-1">
           {suggestions.map((item, i) => (

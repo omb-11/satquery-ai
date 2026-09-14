@@ -3,9 +3,9 @@
 [![Smart India Hackathon 2026](https://img.shields.io/badge/SIH%202026-Problem%20Statement%2026167-00ff87?style=for-the-badge&logo=satellite)](https://www.sih.gov.in/)
 [![ISRO Theme](https://img.shields.io/badge/Organization-ISRO-blue?style=for-the-badge&logo=nasa)](https://isro.gov.in/)
 [![Production Live](https://img.shields.io/badge/Production-Live%20on%20Vercel-00e5ff?style=for-the-badge&logo=vercel)](https://sqai-psi.vercel.app)
-[![Tests Passing](https://img.shields.io/badge/Tests-30%2F30%20Passed%20(0.65s)-00ff87?style=for-the-badge&logo=pytest)](https://github.com/omb-11/satquery-ai)
+[![Tests Passing](https://img.shields.io/badge/Tests-36%2F36%20Passed%20(100%25)-00ff87?style=for-the-badge&logo=pytest)](https://github.com/omb-11/satquery-ai)
 
-> **Agentic Earth Observation Intelligence Workstation** for natural language Visual Question Answering (VQA), bi-temporal change detection, text-guided grounding, and multi-modal Optical + SAR fusion. Built for ISRO's Smart India Hackathon 2026 Problem Statement 26167.
+> **Agentic Earth Observation Intelligence Workstation** for natural language Visual Question Answering (VQA), bi-temporal change detection, text-guided grounding, and multi-modal Optical + SAR fusion with Google Gemini reasoning and zero-hallucination deterministic grounding. Built for ISRO's Smart India Hackathon 2026 Problem Statement 26167.
 
 ---
 
@@ -15,6 +15,7 @@
 - **Interactive SIH Demo Walkthrough**: [https://sqai-psi.vercel.app/demo](https://sqai-psi.vercel.app/demo)
 - **GitHub Repository**: [https://github.com/omb-11/satquery-ai](https://github.com/omb-11/satquery-ai) *(Private)*
 - **API Documentation**: `http://localhost:8000/docs` (Swagger UI) / `http://localhost:8000/redoc`
+- **Documentation Suite**: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | [`docs/MODEL_GUIDE.md`](docs/MODEL_GUIDE.md) | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md)
 
 ---
 

@@ -15,6 +15,8 @@ import {
 const Workspace: React.FC = () => {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [mode, setMode] = useState<string>('SINGLE IMAGE');
+  const [precisionMode, setPrecisionMode] = useState<string>('balanced');
+  const [externalQuery, setExternalQuery] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [traceSteps, setTraceSteps] = useState<TraceStep[]>([]);
@@ -126,6 +128,7 @@ const Workspace: React.FC = () => {
 
     const inputMode = getBackendInputMode(mode);
     const fileIds = files.map(f => f.file_id);
+    const params = { precision_mode: precisionMode };
 
     // Stream live execution trace via SSE
     try {
@@ -149,7 +152,7 @@ const Workspace: React.FC = () => {
         async (error: any) => {
           console.warn("SSE stream interrupted, falling back to sync analyze API:", error);
           try {
-            const res = await analyzeImages(query, fileIds, inputMode);
+            const res = await analyzeImages(query, fileIds, inputMode, params);
             setResult(res);
             if (res.trace && res.trace.length > 0) {
               setTraceSteps(res.trace);
@@ -173,7 +176,8 @@ const Workspace: React.FC = () => {
           } finally {
             setIsAnalyzing(false);
           }
-        }
+        },
+        params
       );
     } catch (e) {
       console.error("Dispatch error:", e);
@@ -230,6 +234,8 @@ const Workspace: React.FC = () => {
               setFiles={setFiles} 
               mode={mode} 
               setMode={setMode} 
+              precisionMode={precisionMode}
+              setPrecisionMode={setPrecisionMode}
               onLoadDemo={handleLoadDemo}
             />
           </div>
@@ -244,6 +250,7 @@ const Workspace: React.FC = () => {
               mode={mode} 
               focusedRegion={focusedRegion}
               evidenceItems={result?.evidence || []}
+              onAskAboutRegion={(q) => setExternalQuery(q)}
             />
           </div>
 
@@ -254,6 +261,7 @@ const Workspace: React.FC = () => {
             result={result}
             traceSteps={traceSteps}
             onFocusRegion={handleFocusRegion}
+            onAskAboutRegion={(q) => setExternalQuery(q)}
           />
         </div>
         
@@ -289,6 +297,8 @@ const Workspace: React.FC = () => {
               mode={mode} 
               isAnalyzing={isAnalyzing} 
               onAnalyze={handleAnalyze} 
+              externalQuery={externalQuery}
+              followUpQuestions={result?.follow_up_questions || []}
             />
             <ResultPanel 
               result={result} 

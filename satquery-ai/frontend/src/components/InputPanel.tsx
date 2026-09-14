@@ -9,10 +9,20 @@ interface InputPanelProps {
   setFiles: React.Dispatch<React.SetStateAction<UploadedFile[]>>;
   mode: string;
   setMode: (mode: string) => void;
+  precisionMode?: string;
+  setPrecisionMode?: (mode: string) => void;
   onLoadDemo?: (demoKey: string) => void;
 }
 
-const InputPanel: React.FC<InputPanelProps> = ({ files, setFiles, mode, setMode, onLoadDemo }) => {
+const InputPanel: React.FC<InputPanelProps> = ({ 
+  files, 
+  setFiles, 
+  mode, 
+  setMode, 
+  precisionMode = 'balanced',
+  setPrecisionMode,
+  onLoadDemo 
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
@@ -131,6 +141,53 @@ const InputPanel: React.FC<InputPanelProps> = ({ files, setFiles, mode, setMode,
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Precision Level Selector */}
+      <div className="p-3 border-b border-space-700 bg-space-950/40">
+        <div className="text-[10px] font-mono uppercase text-hud-muted tracking-wider mb-2 flex items-center justify-between">
+          <span className="flex items-center space-x-1.5">
+            <Compass size={11} className="text-emerald" />
+            <span>Analysis Precision</span>
+          </span>
+          <span className="text-[9px] font-mono text-emerald uppercase font-bold">
+            {precisionMode.toUpperCase()}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-4 gap-1 p-0.5 bg-space-950 border border-space-700/80 rounded-xs">
+          {[
+            { id: 'fast', label: 'FAST', desc: 'Screening' },
+            { id: 'balanced', label: 'BAL', desc: 'Standard' },
+            { id: 'precise', label: 'PREC', desc: 'Deep' },
+            { id: 'expert', label: 'EXP', desc: 'Audit' },
+          ].map((lvl) => {
+            const isSel = precisionMode.toLowerCase() === lvl.id;
+            return (
+              <button
+                key={lvl.id}
+                type="button"
+                onClick={() => setPrecisionMode && setPrecisionMode(lvl.id)}
+                className={`py-1 text-center rounded-xs font-mono text-[10px] font-bold tracking-wider transition-all ${
+                  isSel
+                    ? 'bg-space-800 text-emerald border border-emerald/50 shadow-glow-sm'
+                    : 'text-hud-muted hover:text-hud-text hover:bg-space-850'
+                }`}
+                title={`${lvl.label} Mode: ${lvl.desc}`}
+              >
+                {lvl.label}
+              </button>
+            );
+          })}
+        </div>
+        <div className="text-[9px] font-mono text-hud-subtle mt-1.5 flex justify-between">
+          <span>
+            {precisionMode.toLowerCase() === 'fast' && '⚡ Sub-second screening'}
+            {precisionMode.toLowerCase() === 'balanced' && '⚖️ Verified evidence & spectral masks'}
+            {precisionMode.toLowerCase() === 'precise' && '🎯 Cross-modal fusion & spatial focus'}
+            {precisionMode.toLowerCase() === 'expert' && '🔬 Complete audit trace + Gemini reasoning'}
+          </span>
         </div>
       </div>
 

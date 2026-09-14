@@ -40,13 +40,20 @@
 | **28** | **Interactive UI** | Hero raster viewport occupying 70% screen with collapsible sidebars | `frontend/src/pages/Workspace.tsx` | `tsc && vite build` | Left/Right collapse buttons | ✅ Complete |
 | **29** | **Reporting** | Automated printable HTML intelligence dossier generator | `backend/reports/generator.py`, `backend/api/routes/reports.py` | `tests/test_api.py::test_health_check` | ResultPanel → `EXPORT REPORT` | ✅ Complete |
 | **30** | **Adaptation & Lab**| Benchmark dataset adapters (VRSBench, RSVQA, CDVQA) & LoRA trainer | `backend/benchmark/`, `training/train_rs_adapter.py` | `BenchmarkLab.tsx`, `ModelAdaptation.tsx` | Top Navigation → Benchmark & Training | ✅ Complete |
+| **31** | **Multimodal AI** | Google Gemini 1.5/2.0 analyst integration with function declarations | `backend/inference/gemini.py`, `backend/agents/orchestrator.py` | `tests/test_gemini_and_viz.py` | TopBar → GEMINI AI Modal | ✅ Complete |
+| **32** | **Spatial Focus** | Cardinal compass & entity directional bbox targeting | `backend/tools/spatial_focus.py` | `tests/test_gemini_and_viz.py` | Viewport → Spatial reticle | ✅ Complete |
+| **33** | **Precision Modes** | FAST, BALANCED, PRECISE, EXPERT operational speed & audit tiers | `backend/core/config.py`, `backend/agents/orchestrator.py` | `tests/test_gemini_and_viz.py` | InputPanel → Precision Segment | ✅ Complete |
+| **34** | **Visualization Plan**| Dynamic visualization & chart planner from real tool data | `backend/tools/visualization_planner.py` | `tests/test_gemini_and_viz.py` | Analytics Shelf → CHARTS tab | ✅ Complete |
+| **35** | **Interactive UX** | "Ask About This Region" direct query prepopulation | `frontend/src/components/ImageViewer.tsx` | `tsc && vite build` | Click evidence box → Ask Region | ✅ Complete |
 
 ---
 
 ## Test Verification Summary
-All backend processing modules and API routes are covered by automated unit and integration tests:
-- **Test Framework**: `pytest` 9.1.1 with `pytest-asyncio` and `httpx`
-- **Total Tests**: **30 passed** in **0.65s**
-- **Geospatial Tests**: 15 tests covering spectral math, SAR normalization, Otsu change detection, GeoTIFF CRS extraction.
+All backend processing modules, Gemini integrations, and API routes are verified:
+- **Test Framework**: `pytest` 8.2.0 with `pytest-asyncio` and `httpx`
+- **Total Tests**: **36 passed (100%)**
+- **Geospatial & Tool Tests**: 15 tests covering spectral math, SAR normalization, Otsu change detection, GeoTIFF CRS extraction.
 - **Agentic Orchestration Tests**: 10 tests covering TaskRouter, ConfidenceEstimator, and EvidenceVerifier.
-- **API Tests**: 5 tests covering health checks, file upload, system info, model registry, and end-to-end analyze flows.
+- **Gemini & Viz Tests**: 6 tests covering SpatialFocusEngine, VisualizationPlanner, GeminiAnalyst fallback, and Settings endpoints.
+- **API Integration Tests**: 5 tests covering health checks, file upload, system info, model registry, and end-to-end analyze flows.
+

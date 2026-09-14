@@ -12,6 +12,7 @@ interface AnalyticsShelfProps {
   result: AnalysisResult | null;
   traceSteps: TraceStep[];
   onFocusRegion?: (region: number[]) => void;
+  onAskAboutRegion?: (query: string) => void;
 }
 
 const AnalyticsShelf: React.FC<AnalyticsShelfProps> = ({
@@ -19,7 +20,8 @@ const AnalyticsShelf: React.FC<AnalyticsShelfProps> = ({
   mode,
   result,
   traceSteps,
-  onFocusRegion
+  onFocusRegion,
+  onAskAboutRegion
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('OVERVIEW');
@@ -30,12 +32,17 @@ const AnalyticsShelf: React.FC<AnalyticsShelfProps> = ({
   const sarData = toolResults.sar_processing || {};
   const fusionData = toolResults.fusion || {};
   const evidenceList = result?.evidence || [];
+  const plannedCharts = result?.charts || [];
 
   // Determine available tabs based on current mission mode and execution state
   const tabs = [
     { id: 'OVERVIEW', label: 'OVERVIEW', icon: Compass },
     { id: 'SPECTRAL', label: 'SPECTRAL', icon: BarChart3 },
   ];
+
+  if (plannedCharts.length > 0) {
+    tabs.push({ id: 'CHARTS', label: `CHARTS (${plannedCharts.length})`, icon: BarChart3 });
+  }
 
   if (mode === 'BI-TEMPORAL' || toolResults.change_detection) {
     tabs.push({ id: 'TEMPORAL', label: 'TEMPORAL', icon: Activity });
@@ -246,6 +253,49 @@ const AnalyticsShelf: React.FC<AnalyticsShelfProps> = ({
             </div>
           )}
 
+          {/* TAB: CHARTS & VISUALIZATIONS */}
+          {activeTab === 'CHARTS' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {plannedCharts.map((ch: any, idx: number) => {
+                const maxVal = Math.max(...(ch.values || [1]), 0.01);
+                return (
+                  <div key={idx} className="bg-space-850 border border-space-700 p-3 rounded-xs flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[11px] font-bold text-emerald">{ch.title}</span>
+                        <span className="text-[9px] text-hud-subtle uppercase px-1.5 py-0.5 bg-space-800 border border-space-700 rounded-xs">
+                          {ch.chart_type} ({ch.unit})
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-hud-muted mb-2.5">{ch.description}</p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {(ch.labels || []).map((lbl: string, lIdx: number) => {
+                        const val = ch.values[lIdx] ?? 0;
+                        const pct = Math.max(5, Math.min(100, (Math.abs(val) / maxVal) * 100));
+                        return (
+                          <div key={lIdx} className="space-y-0.5">
+                            <div className="flex justify-between text-[10px]">
+                              <span className="text-hud-muted">{lbl}</span>
+                              <span className="text-emerald font-bold">{typeof val === 'number' ? val.toFixed(2) : val} {ch.unit}</span>
+                            </div>
+                            <div className="w-full bg-space-800 h-2 rounded-xs overflow-hidden">
+                              <div 
+                                className="bg-emerald h-full rounded-xs shadow-glow-sm transition-all duration-300"
+                                style={{ width: `${pct}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* TAB 3: TEMPORAL */}
           {activeTab === 'TEMPORAL' && (
             <div className="space-y-3">
@@ -346,13 +396,27 @@ const AnalyticsShelf: React.FC<AnalyticsShelfProps> = ({
                             {typeof r.confidence === 'number' ? `${(r.confidence * 100).toFixed(0)}%` : '85%'}
                           </td>
                           <td className="py-1.5 px-2 text-right">
-                            <button
-                              onClick={() => onFocusRegion && onFocusRegion(bbox)}
-                              className="text-emerald hover:text-emerald-glow inline-flex items-center space-x-1 px-1.5 py-0.5 bg-space-800 hover:bg-space-700 rounded-xs transition-colors"
-                            >
-                              <span>FOCUS</span>
-                              <ArrowUpRight size={10} />
-                            </button>
+                            <div className="flex items-center justify-end space-x-1.5">
+                              <button
+                                type="button"
+                                onClick={() => onFocusRegion && onFocusRegion(bbox)}
+                                className="text-emerald hover:text-emerald-glow inline-flex items-center space-x-1 px-1.5 py-0.5 bg-space-800 hover:bg-space-700 rounded-xs transition-colors"
+                                title="Target on map"
+                              >
+                                <span>FOCUS</span>
+                                <ArrowUpRight size={10} />
+                              </button>
+                              {onAskAboutRegion && (
+                                <button
+                                  type="button"
+                                  onClick={() => onAskAboutRegion(`Analyze change at region [${bbox[0].toFixed(2)}, ${bbox[1].toFixed(2)}, ${bbox[2].toFixed(2)}, ${bbox[3].toFixed(2)}] (${r.change_type})`)}
+                                  className="text-hud-muted hover:text-emerald px-1.5 py-0.5 bg-space-950 hover:bg-space-800 border border-space-700 rounded-xs transition-colors"
+                                  title="Query this region"
+                                >
+                                  <span>ASK</span>
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       );
@@ -384,15 +448,27 @@ const AnalyticsShelf: React.FC<AnalyticsShelfProps> = ({
                         </div>
                         <div className="mt-1.5 flex items-center justify-between text-[9px] text-hud-muted">
                           <span>SCORE: {(ev.score * 100).toFixed(0)}%</span>
-                          {hasRegion && (
-                            <button
-                              onClick={() => onFocusRegion && onFocusRegion(ev.region)}
-                              className="text-emerald hover:text-emerald-glow inline-flex items-center space-x-1"
-                            >
-                              <span>SHOW ON MAP</span>
-                              <ArrowUpRight size={9} />
-                            </button>
-                          )}
+                          <div className="flex items-center space-x-2">
+                            {hasRegion && (
+                              <button
+                                type="button"
+                                onClick={() => onFocusRegion && onFocusRegion(ev.region)}
+                                className="text-emerald hover:text-emerald-glow inline-flex items-center space-x-1"
+                              >
+                                <span>SHOW ON MAP</span>
+                                <ArrowUpRight size={9} />
+                              </button>
+                            )}
+                            {hasRegion && onAskAboutRegion && (
+                              <button
+                                type="button"
+                                onClick={() => onAskAboutRegion(`Investigate ${ev.category || 'feature'} at [${ev.region[0].toFixed(2)}, ${ev.region[1].toFixed(2)}, ${ev.region[2].toFixed(2)}, ${ev.region[3].toFixed(2)}]`)}
+                                className="text-hud-muted hover:text-emerald underline"
+                              >
+                                ASK
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
                     );
