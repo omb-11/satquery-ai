@@ -55,7 +55,13 @@ class Settings(BaseSettings):
 
     # API
     api_prefix: str = "/api/v1"
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000", "https://sqai-psi.vercel.app"]
+    cors_origins: list[str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://sqai-psi.vercel.app",
+        "https://sqai-omyaas-projects.vercel.app",
+        "*",
+    ]
 
     class Config:
         env_file = ".env"

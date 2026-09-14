@@ -1,9 +1,18 @@
 import axios from 'axios';
 import { AnalysisResult, ModelInfo, SystemInfo } from './types';
 
+// In production (Vercel), VITE_API_URL points to the Render backend.
+// In local dev, falls back to the local vite proxy (/api/v1).
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/v1`
+  : '/api/v1';
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: BASE_URL,
 });
+
+// Also patch the streaming fetch to use the same base
+const apiBase = import.meta.env.VITE_API_URL || '';
 
 export const uploadFiles = async (files: File[]) => {
   const formData = new FormData();
@@ -40,7 +49,7 @@ export const analyzeStream = async (
   parameters?: Record<string, any>
 ) => {
   try {
-    const response = await fetch('/api/v1/analyze/stream', {
+    const response = await fetch(`${apiBase}/api/v1/analyze/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -121,7 +130,7 @@ export const getReport = async (id: string) => {
 };
 
 export const getReportHtmlUrl = (id: string) => {
-  return `/api/v1/reports/${id}`;
+  return `${BASE_URL}/reports/${id}`;
 };
 
 export const getGeminiSettings = async () => {
@@ -148,4 +157,3 @@ export const updatePrecisionSettings = async (precisionMode: string) => {
   const response = await api.post('/settings/precision', { precision_mode: precisionMode });
   return response.data;
 };
-

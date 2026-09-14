@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: satquery-ai-backend
+    runtime: python
+    region: singapore
+    plan: free
+    rootDir: satquery-ai
+    buildCommand: pip install --upgrade pip && pip install -r backend/requirements.txt
+    startCommand: python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: .
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: DEVICE
+        value: cpu
+      - key: ENABLE_GPU
+        value: "false"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+    healthCheckPath: /api/v1/health
